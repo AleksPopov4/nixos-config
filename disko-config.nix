@@ -22,7 +22,7 @@
             };
             # Allocate some fixed size for persist, say 10G.
             persist = {
-              size = "10G";
+              size = "16G";
               content = {
                 type = "filesystem";
                 format = "ext4";

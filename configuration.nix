@@ -15,6 +15,11 @@
   ];
 
   disko.devices.disk.main.device = "/dev/sda";
+
+  virtualisation.vmVariantWithDisko = {
+    imageSize = "32G";
+    virtualisation.fileSystems."/persist".neededForBoot = true;
+  };
   # Configure Git settings
   #programs.git = {
    # enable = true;
@@ -136,8 +141,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
-
-  virtualisation.vmVariantWithDisko = {
-    virtualisation.fileSystems."/persist".neededForBoot = true;
-  };
 }
