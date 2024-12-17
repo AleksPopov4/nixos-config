@@ -10,7 +10,7 @@
     ./disko-config.nix
   ];
 
-  disko.devices.disk.main.device = "/dev/sda";
+  #disko.devices.disk.main.device = "/dev/sda";
 
   virtualisation.vmVariantWithDisko = {
     virtualisation.fileSystems."/persist".neededForBoot = true;
@@ -26,9 +26,9 @@
   #};
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  #boot.loader.grub.enable = true;
+  #boot.loader.grub.device = "/dev/sda";
+  #boot.loader.grub.useOSProber = true;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
