@@ -3,6 +3,8 @@
     disk = {
       main = {
         type = "disk";
+        imageSize = "32G";
+        device = "/dev/vda";
         content = {
           type = "gpt";
           partitions = {

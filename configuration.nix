@@ -5,10 +5,6 @@
 { config, pkgs, ... }:
 
 {
-  # {
-#  imports = [ ./disko-config.nix ];
-#  disko.devices.disk.main.device = "/dev/sda";
-# }
   imports = [
     ./hardware-configuration.nix
     ./disko-config.nix
@@ -17,9 +13,11 @@
   disko.devices.disk.main.device = "/dev/sda";
 
   virtualisation.vmVariantWithDisko = {
-    imageSize = "32G";
     virtualisation.fileSystems."/persist".neededForBoot = true;
   };
+
+  #virtualisation.diskSize = 32 * 1024; # Disk size in MB (32GB)
+
   # Configure Git settings
   #programs.git = {
    # enable = true;
