@@ -16,13 +16,6 @@
    # userEmail = "popovaleks444@gmail.com";
   #};
 
- # Set up environment variables
- environment.variables = {
-   EDITOR = "nano";
-   LANG = "en_US.UTF-8";
-   QWE = "123";
-  };
-
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
@@ -88,9 +81,6 @@
     #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lex = {
     isNormalUser = true;
@@ -141,4 +131,7 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
+  virtualisation.vmVariantWithDisko = {
+    virtualisation.fileSystems."/persist".neededForBoot = true;
+  };
 }
