@@ -31,7 +31,7 @@
             };
             # Use the remaining space for root.
             root = {
-              size = "100%";
+              size = "16G";
               content = {
                 type = "filesystem";
                 format = "ext4";
