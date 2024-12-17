@@ -5,10 +5,16 @@
 { config, pkgs, ... }:
 
 {
+  # {
+#  imports = [ ./disko-config.nix ];
+#  disko.devices.disk.main.device = "/dev/sda";
+# }
   imports = [
     ./hardware-configuration.nix
+    ./disko-config.nix
   ];
 
+  disko.devices.disk.main.device = "/dev/sda";
   # Configure Git settings
   #programs.git = {
    # enable = true;

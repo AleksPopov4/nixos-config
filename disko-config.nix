@@ -1,9 +1,3 @@
-# USAGE in your configuration.nix.
-# Update devices to match your hardware.
-# {
-#  imports = [ ./disko-config.nix ];
-#  disko.devices.disk.main.device = "/dev/sda";
-# }
 {
   disko.devices = {
     disk = {
@@ -26,6 +20,16 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
+            # Allocate some fixed size for persist, say 10G.
+            persist = {
+              size = "10G";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/persist";
+              };
+            };
+            # Use the remaining space for root.
             root = {
               size = "100%";
               content = {
