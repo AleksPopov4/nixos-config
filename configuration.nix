@@ -10,7 +10,7 @@
     ./disko-config.nix
   ];
 
-  #disko.devices.disk.main.device = "/dev/sda";
+  disko.devices.disk.main.device = "/dev/sda";
 
   virtualisation.vmVariantWithDisko = {
     virtualisation.fileSystems."/persist".neededForBoot = true;
@@ -99,6 +99,8 @@
     #  thunderbird
     ];
   };
+
+  users.users.lex.initialPassword = "123";
 
   # Install firefox.
   programs.firefox.enable = true;

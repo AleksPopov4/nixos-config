@@ -12,11 +12,19 @@
       specialArgs.inputs = inputs;
       modules = [
         disko.nixosModules.disko
-        ./disko-config.nix
-        {
-          _module.args.disks = [ "/dev/vda" ];
-        }
+        #./disko-config.nix
         ./configuration.nix
+
+        ({ config, lib, pkgs, ... }: let
+             zfsConfig = import ./disko-config.nix {
+               lib = lib;
+             }.createZfsConfig {
+               espSize = "512M";
+               swapSize = "16G";
+             };
+           in {
+             disko.devices = zfsConfig.disko.devices;
+        })
       ];
     };
   };
