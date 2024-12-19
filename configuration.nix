@@ -7,7 +7,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./disko-config.nix
+    #./disko-config.nix
   ];
 
   disko.devices.disk.main.device = "/dev/sda";

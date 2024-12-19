@@ -1,19 +1,16 @@
-{ lib ? import <nixpkgs/lib>, inputs, specialArgs, config, options, modulesPath }:
-let
+{ lib }:
+{
   createZfsConfig = {
-    #devices,
-    #redundancy ? 0,
     espSize ? "512M",
     swapSize ? "16G",
   }:
-
   {
     disko.devices = {
       disk = {
         main = {
           type = "disk";
-          imageSize = "34G";
-          device = "/dev/vda";
+          imageSize = "50G";
+          #device = "/dev/vda";
           content = {
             type = "gpt";
             partitions = {
@@ -31,9 +28,16 @@ let
                   mountOptions = [ "umask=0077" ];
                 };
               };
-              # Allocate some fixed size for persist, say 10G.
+              root = {
+                size = "16G";
+                content = {
+                  type = "filesystem";
+                  format = "ext4";
+                  mountpoint = "/";
+                };
+              };
               persist = {
-                size = "100%-" + swapSize;
+                size = "16G";
                 content = {
                   type = "filesystem";
                   format = "ext4";
@@ -52,5 +56,4 @@ let
       };
     };
   };
-in
-createZfsConfig
+}

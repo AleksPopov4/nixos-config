@@ -5,25 +5,24 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {self, nixpkgs, disko, ...}@inputs: {
-
+  outputs = { self, nixpkgs, disko, ... }@inputs: {
     nixosConfigurations.mymachine = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs.inputs = inputs;
       modules = [
         disko.nixosModules.disko
-        #./disko-config.nix
         ./configuration.nix
 
         ({ config, lib, pkgs, ... }: let
-             zfsConfig = import ./disko-config.nix {
-               lib = lib;
-             }.createZfsConfig {
-               espSize = "512M";
-               swapSize = "16G";
-             };
-           in {
-             disko.devices = zfsConfig.disko.devices;
+           diskoConfig = import ./disko-config.nix {
+             lib = lib;
+           };
+           zfsConfig = diskoConfig.createZfsConfig {
+             espSize = "512M";
+             swapSize = "16G";
+           };
+         in {
+           disko.devices = zfsConfig.disko.devices;
         })
       ];
     };
