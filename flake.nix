@@ -18,6 +18,8 @@
              lib = lib;
            };
            zfsConfig = diskoConfig.createZfsConfig {
+             devices = [ "/dev/sda" "/dev/sdb" "/dev/sdc" ];
+             redundancy = 0;
              espSize = "512M";
              swapSize = "16G";
            };
