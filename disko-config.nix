@@ -1,4 +1,4 @@
-{ lib }:
+{ lib ? import <nixpkgs/lib>  }:
 let
   createZfsConfig = {
     devices,
@@ -62,8 +62,7 @@ let
     #
     # We will always create the EF02 partition for consistency, as per provided examples.
 
-    # Function to create partitions for a disk with ESP,ZFS,SWAP
-    makeFullPartitions = {
+    makeMaster = {
     }:
     {
       boot = {
@@ -99,7 +98,7 @@ let
     };
 
     # Function to create partitions for a disk with only ZFS
-    makeZfsOnlyPartitions = {
+    makeSlave = {
     }:
     {
       zfs = {
@@ -110,11 +109,46 @@ let
       };
     };
 
-    # Decide partition scheme per device index
-    partitionsForDevice = lib.genList (i: if redundancy == 0 && deviceCount > 1 && i != 0
-      then makeZfsOnlyPartitions {}
-      else makeFullPartitions {}
-    ) deviceCount;
+    makeZPool = {
+    }:
+    {
+      zpool = {
+        zroot = {
+          type = "zpool";
+          mode = {
+            topology = {
+              type = "topology";
+              vdev = [
+                {
+                  mode = "mirror";
+                  members = [ "data1" "data2" ];
+                }
+                {
+                  members = [ "data3" ];
+                }
+              ];
+              spare = [ "spare" ];
+          };
+
+          rootFsOptions = {
+            compression = "zstd";
+            "com.sun:auto-snapshot" = "false";
+          };
+          mountpoint = "/";
+          datasets = {
+            # See examples/zfs.nix for more comprehensive usage.
+            zfs_fs = {
+              type = "zfs_fs";
+              mountpoint = "/zfs_fs";
+              options."com.sun:auto-snapshot" = "true";
+            };
+          };
+        };
+      };
+    };
+    };
+
+    makePartitions = i: if i == 0 then makeMaster {} else makeSlave {};
 
     # Create a disko.devices set from our devices array
     # We'll name each device "mainX" for X in [0..deviceCount-1]
@@ -126,7 +160,7 @@ let
           device = builtins.elemAt devices index;
           content = {
             type = "gpt";
-            partitions = builtins.elemAt partitionsForDevice (index+1); 
+            partitions = makePartitions index;
           };
         };
       }) (lib.range 0 (deviceCount - 1))
@@ -151,7 +185,7 @@ let
     # We'll just return the disk configuration here. The ZFS top-level config might be done elsewhere.
 
   in {
-    disko.devices.disk = deviceMap;
+    disko.devices = deviceMap;
     # If needed, we could add hints about ZFS vdev structure here, but the prompt only asks for partitioning.
     # The caller can interpret vdevType and deviceCount to set up a zpool outside this function.
   };
