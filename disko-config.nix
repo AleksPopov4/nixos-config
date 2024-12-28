@@ -59,8 +59,7 @@ let
     };
   };
   
-  makeZpoolConfig = { members, mode }: {
-    zroot = {
+  makeZpoolConfig = { members , mode }: {
         type = "zpool";
         mode = {
           topology = {
@@ -74,7 +73,6 @@ let
           };
         };
       };
-    };
 
   extractMode = { devices, redundancy } :
     let 
@@ -98,23 +96,23 @@ let
 
   extractName = device:
     lib.lists.last (lib.strings.splitString "/" device);
-
-  extractNames = members: 
-    lib.lists.filter (e: e != "") (lib.strings.splitString "/" members);
+  
+  extractNames = members:
+    lib.lists.map (item: lib.lists.last (lib.strings.splitString "/" item)) members;
 
   makeMaster = args:
     let
-      name = extractName args.device;
+      name = extractName args.devices;
       value = (makeMasterConfig args);
     in { name = name; value = value; };    
 
-  makeSlave = device:
+  makeSlave = devices:
     let
-      name = extractName device;
-      value = makeSlaveConfig device;
+      name = extractName devices;
+      value = makeSlaveConfig devices;
     in { name = name; value = value; };
 
-  makeMembers = args:
+  makeZpool = args:
     let
       name = "zroot";
       value = (makeZpoolConfig args);
@@ -139,9 +137,9 @@ let
           (map makeSlave (builtins.tail devices))
         );
         zpool = lib.listToAttrs(
-          [ (makeZpoolConfig {
+          [ (makeZpool {
             members = extractNames devices;
-            mode = extractMode devices redundancy;
+            mode = extractMode { devices = devices; redundancy = redundancy; };
           }) ]
         );
       };
