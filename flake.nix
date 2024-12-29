@@ -19,9 +19,9 @@
            };
            zfsConfig = diskoConfig.createZfsConfig {
              devices = [ "/dev/sda" "/dev/sdb" "/dev/sdc" ];
-             redundancy = 0;
+             redundancy = 2;
              espSize = "512M";
-             swapSize = "16G";
+             swapSize = "8G";
            };
          in {
            disko.devices = zfsConfig.disko.devices;

@@ -18,7 +18,7 @@ let
       };
     };
     zfs = {
-      size = "100%";
+      size = "8G";
       content = {
         type = "zfs";
         pool = "zroot";
@@ -36,6 +36,7 @@ let
   in {
     type = "disk";
     device = devices;
+    imageSize = "20G";
     content = {
       type = "gpt";
       partitions = partitions // maybeSwap;
@@ -45,6 +46,7 @@ let
   makeSlaveConfig = device: {
     type = "disk";
     device = device;
+    imageSize = "20G";
     content = {
       type = "gpt";
       partitions = {
@@ -61,6 +63,7 @@ let
   
   makeZpoolConfig = { members , mode }: {
         type = "zpool";
+        mountpoint = "/";
         mode = {
           topology = {
             type = "topology";
@@ -122,7 +125,7 @@ let
     devices ? ["/dev/sda" "/dev/sdb" "/dev/sdc"],
     redundancy ? 0,
     espSize ? "512M",
-    swapSize ? "16G",
+    swapSize ? "8G",
   }: {
     disko = {
       devices = {

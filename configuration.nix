@@ -5,11 +5,17 @@
     ./hardware-configuration.nix
   ];
   
-  disko.devices.disk.main.device = "/dev/sda";
+  #disko.devices.disk.main.device = "/dev/sda";
 
   virtualisation.vmVariantWithDisko = {
-    virtualisation.fileSystems."/persist".neededForBoot = true;
+    virtualisation.fileSystems."/".neededForBoot = true;
+    virtualisation.memorySize = 2048;
+    virtualisation.diskSize = 102400;
   };
+
+  # disko.tests.extraConfig = {
+  #   ImageSize = "100G";
+  # };
 
   # Basic system configuration for testing in a VM
   #boot.loader.grub = {
@@ -21,6 +27,7 @@
   # Networking
   networking.hostName = "disko-test-vm"; # Set a hostname for testing
   networking.useDHCP = true;
+  networking.hostId = "e4d32f76";
 
   # Enable SSH for testing purposes
   services.openssh.enable = true;
