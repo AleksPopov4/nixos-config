@@ -21,6 +21,7 @@
              devices = [ "/dev/sda" "/dev/sdb" "/dev/sdc" ];
              redundancy = 2;
              espSize = "512M";
+             imageSize = "16G";
              swapSize = "8G";
            };
          in {
