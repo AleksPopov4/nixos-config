@@ -44,9 +44,10 @@ let
       };
     };
 
-    makeSlaveConfig = device: {
+    makeSlaveConfig = { device, imageSize }: {
       type = "disk";
       device = device;
+      imageSize = imageSize;
       content = {
         type = "gpt";
         partitions = {
@@ -109,10 +110,10 @@ let
         value = (makeMasterConfig args);
       in { name = name; value = value; };    
 
-    makeSlave = device:
+    makeSlave = imageSize: device:
       let
         name = extractName device;
-        value = makeSlaveConfig device;
+        value = makeSlaveConfig { device = device; imageSize = imageSize; };
       in { name = name; value = value; };
 
     makeZpool = args:
@@ -130,7 +131,6 @@ let
     }: {
       disko = {
         devices = {
-          # TODO: FIX!
           disk = lib.listToAttrs (
             [ (makeMaster {
               devices = (builtins.head devices);
@@ -139,7 +139,7 @@ let
               swapSize = swapSize;
             }) ]
             ++
-            (map makeSlave (builtins.tail devices))
+            (map (device: makeSlave imageSize device) (builtins.tail devices))
           );
           zpool = lib.listToAttrs(
             [ (makeZpool {
@@ -152,4 +152,5 @@ let
     };
 in {
   createZfsConfig = createZfsConfig;
+
 }
