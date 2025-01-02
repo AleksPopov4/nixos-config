@@ -22,7 +22,7 @@
              redundancy = 2;
              espSize = "512M";
              imageSize = "16G";
-             swapSize = "8G";
+             swapSize = "";
            };
          in {
            disko.devices = zfsConfig.disko.devices;

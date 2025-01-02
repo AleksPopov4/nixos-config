@@ -2,9 +2,9 @@
 let
   makeMasterConfig = {
     devices,
-    espSize ? "512M",
-    imageSize ? "8G",
-    swapSize ? "",
+    espSize,
+    imageSize,
+    swapSize,
   }:
   let
     partitions = {
